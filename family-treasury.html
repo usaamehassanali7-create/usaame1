@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reer Ali Mohamed — Iskaashato</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+  :root {
+    --bg:#0d0f14; --surface:#141720; --card:#1a1f2e; --border:#252b3b;
+    --accent:#f5c842; --accent2:#3b82f6; --green:#22c55e; --orange:#f97316;
+    --red:#ef4444; --text:#e8eaf0; --muted:#6b7280; --gold:#fbbf24;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+
+  /* HEADER */
+  .site-header{background:linear-gradient(135deg,#141720,#1a1f2e);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:200}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.05rem;color:var(--accent)}
+  .logo-sub{font-size:0.68rem;color:var(--muted);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+  .header-right{display:flex;align-items:center;gap:10px}
+  .admin-btn{display:flex;align-items:center;gap:7px;background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.3);color:var(--accent);padding:6px 14px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s}
+  .admin-btn:hover{background:rgba(245,200,66,.2)}
+  .admin-dot{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),#e5a800);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#000}
+
+  /* QUARTER NAV */
+  .quarter-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:0;overflow-x:auto}
+  .q-tab{padding:14px 20px;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.03em}
+  .q-tab:hover{color:var(--text)}
+  .q-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .q-tab .q-status{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;vertical-align:middle}
+  .qs-live{background:var(--green);box-shadow:0 0 6px var(--green)}
+  .qs-done{background:var(--muted)}
+
+  /* CONTAINER */
+  .container{max-width:1200px;margin:0 auto;padding:2rem}
+  .page-title{font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:4px}
+  .page-title span{color:var(--accent)}
+  .page-sub{color:var(--muted);font-size:.85rem;margin-bottom:1.8rem}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:1.8rem}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+  .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .stat-card.gold::before{background:linear-gradient(90deg,var(--accent),#e5a800)}
+  .stat-card.blue::before{background:linear-gradient(90deg,var(--accent2),#60a5fa)}
+  .stat-card.green::before{background:linear-gradient(90deg,var(--green),#4ade80)}
+  .stat-card.red::before{background:linear-gradient(90deg,var(--red),#f87171)}
+  .stat-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px;font-weight:700}
+  .stat-value{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1}
+  .stat-value.accent{color:var(--accent)}
+  .stat-value.green{color:var(--green)}
+  .stat-value.red{color:var(--red)}
+  .stat-sub{font-size:.72rem;color:var(--muted);margin-top:5px}
+
+  /* PROGRESS */
+  .progress-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:1.8rem}
+  .progress-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+  .progress-title{font-weight:700;font-size:.95rem}
+  .progress-pct{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--accent)}
+  .progress-track{background:rgba(255,255,255,.06);border-radius:999px;height:12px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#f5c842,#fbbf24,#f97316);transition:width 1s ease;position:relative}
+  .progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:18px;background:rgba(255,255,255,.3);border-radius:999px;animation:shimmer 1.5s infinite}
+  @keyframes shimmer{0%,100%{opacity:.3}50%{opacity:.8}}
+  .progress-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:.73rem;color:var(--muted)}
+
+  /* TWO COL */
+  .two-col{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-bottom:1.8rem}
+  @media(max-width:880px){.two-col{grid-template-columns:1fr}}
+
+  /* SECTION CARD */
+  .section-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+  .section-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .section-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .icon-gold{background:rgba(245,200,66,.15)}
+  .icon-red{background:rgba(239,68,68,.15)}
+  .section-title{font-weight:700;font-size:.95rem}
+  .section-desc{font-size:.7rem;color:var(--muted);margin-top:2px}
+
+  /* HOF */
+  .hof-grid{display:flex;flex-direction:column;gap:9px}
+  .hof-item{display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:11px 13px;transition:border-color .2s}
+  .hof-item:hover{border-color:rgba(245,200,66,.3)}
+  .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+  .av-sm{width:34px;height:34px;font-size:.78rem}
+  .av-gold{background:linear-gradient(135deg,#f5c842,#e5a800);color:#000}
+  .av-blue{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
+  .av-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+  .av-pur{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff}
+  .av-rose{background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff}
+  .av-teal{background:linear-gradient(135deg,#14b8a6,#0f766e);color:#fff}
+  .av-gray{background:rgba(255,255,255,.08);color:var(--muted)}
+  .hof-info{flex:1}
+  .hof-name{font-weight:600;font-size:.83rem}
+  .hof-amt{font-size:.69rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:.65rem;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+  .badge-vip{background:rgba(245,200,66,.15);color:var(--accent);border:1px solid rgba(245,200,66,.3)}
+  .badge-hero{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+
+  /* ALERTS */
+  .alert-list{display:flex;flex-direction:column;gap:7px}
+  .alert-item{display:flex;align-items:center;gap:9px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:9px;padding:9px 11px}
+  .alert-name{font-size:.8rem;font-weight:600;flex:1}
+  .alert-due{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--red);font-weight:700;text-align:right}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite;flex-shrink:0}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}50%{box-shadow:0 0 0 5px rgba(239,68,68,0)}}
+
+  /* TABLE */
+  .tracker-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.8rem}
+  .tracker-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+  .tracker-title{font-weight:700;font-size:.95rem}
+  .filter-row{display:flex;gap:7px;padding:12px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .filter-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+  .filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,200,66,.08)}
+  .filter-btn.f-green.active{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.08)}
+  .filter-btn.f-orange.active{border-color:var(--orange);color:var(--orange);background:rgba(249,115,22,.08)}
+  .filter-btn.f-red.active{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08)}
+  table{width:100%;border-collapse:collapse}
+  th{background:rgba(255,255,255,.02);padding:9px 14px;text-align:left;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border)}
+  td{padding:11px 14px;font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .member-cell{display:flex;align-items:center;gap:9px}
+  .member-name{font-weight:600;font-size:.84rem}
+  .status-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+  .chip-green{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+  .chip-orange{background:rgba(249,115,22,.12);color:var(--orange);border:1px solid rgba(249,115,22,.25)}
+  .chip-red{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.25);animation:flash 2s infinite}
+  @keyframes flash{0%,100%{border-color:rgba(239,68,68,.25)}50%{border-color:rgba(239,68,68,.6)}}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:.78rem}
+  .text-green{color:var(--green)}
+  .text-orange{color:var(--orange)}
+  .text-red{color:var(--red);font-weight:700}
+  .text-muted{color:var(--muted)}
+  .mini-bar{width:72px;height:5px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden}
+  .mini-fill{height:100%;border-radius:999px}
+  .mf-green{background:var(--green)}
+  .mf-orange{background:var(--orange)}
+  .months-tag{display:inline-flex;gap:3px;flex-wrap:wrap}
+  .month-pill{padding:2px 6px;border-radius:4px;font-size:.62rem;font-weight:700}
+  .mp-paid{background:rgba(34,197,94,.15);color:var(--green)}
+  .mp-un{background:rgba(255,255,255,.04);color:var(--muted)}
+  .edit-btn{background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.2);color:var(--accent);padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .2s;display:none}
+  .edit-btn:hover{background:rgba(245,200,66,.25)}
+  body.admin-mode .edit-btn{display:inline-flex;align-items:center;gap:4px}
+  body.admin-mode .tracker-header{background:rgba(245,200,66,.04);border-bottom-color:rgba(245,200,66,.2)}
+
+  /* ADMIN PANEL OVERLAY */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;backdrop-filter:blur(4px);align-items:center;justify-content:center}
+  .overlay.open{display:flex}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:18px;width:min(520px,95vw);max-height:90vh;overflow-y:auto;padding:28px}
+  .modal-title{font-size:1.1rem;font-weight:800;margin-bottom:4px}
+  .modal-sub{font-size:.75rem;color:var(--muted);margin-bottom:22px}
+  .form-group{margin-bottom:16px}
+  .form-label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+  .form-input,.form-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:9px;font-size:.85rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color .2s}
+  .form-input:focus,.form-select:focus{border-color:var(--accent)}
+  .form-select option{background:var(--card)}
+  .months-check{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .month-cb{display:flex;align-items:center;gap:5px;font-size:.78rem;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid var(--border);padding:5px 10px;border-radius:7px;transition:all .2s}
+  .month-cb input{accent-color:var(--accent);cursor:pointer}
+  .month-cb.checked{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green)}
+  .btn-row{display:flex;gap:10px;margin-top:20px}
+  .btn-save{flex:1;background:linear-gradient(135deg,var(--accent),#e5a800);color:#000;border:none;padding:11px;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;transition:opacity .2s}
+  .btn-save:hover{opacity:.9}
+  .btn-cancel{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted);padding:11px 20px;border-radius:9px;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s}
+  .btn-cancel:hover{border-color:var(--red);color:var(--red)}
+
+  /* LOGIN MODAL */
+  .login-modal{background:var(--card);border:1px solid rgba(245,200,66,.2);border-radius:18px;width:min(380px,95vw);padding:32px}
+  .login-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),#e5a800);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 16px}
+  .login-title{text-align:center;font-size:1.15rem;font-weight:800;margin-bottom:4px}
+  .login-sub{text-align:center;font-size:.75rem;color:var(--muted);margin-bottom:22px}
+  .login-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);padding:8px 12px;border-radius:7px;font-size:.78rem;margin-bottom:12px;display:none}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;padding:12px 20px;border-radius:10px;font-weight:700;font-size:.85rem;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  /* FOOTER */
+  .site-footer{border-top:1px solid var(--border);padding:18px 2rem;text-align:center;font-size:.72rem;color:var(--muted)}
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  .section-eyebrow{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px}
+  .hof-divider{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 2px;margin:6px 0 2px}
+  .no-data{text-align:center;padding:40px;color:var(--muted);font-size:.85rem}
+  .admin-bar{display:none;background:rgba(245,200,66,.06);border-bottom:1px solid rgba(245,200,66,.15);padding:8px 2rem;font-size:.75rem;color:var(--accent);font-weight:700;align-items:center;gap:8px}
+  body.admin-mode .admin-bar{display:flex}
+  .admin-bar-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Saved successfully</div>
+
+<!-- LOGIN OVERLAY -->
+<div class="overlay" id="loginOverlay">
+  <div class="login-modal">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Admin Access</div>
+    <div class="login-sub">Geli password-ka si aad u gasho admin mode</div>
+    <div class="login-err" id="loginErr">Password qalad ah. Isku day mar kale.</div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="btn-row">
+      <button class="btn-save" onclick="doLogin()">🔓 Gal Admin</button>
+      <button class="btn-cancel" onclick="closeLogin()">Jooji</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <div class="modal-title" id="editModalTitle">Edit Member</div>
+    <div class="modal-sub">Admin waa bedeli karaa lacagta la bixiyay iyo bisha la dabooli</div>
+    <div class="form-group">
+      <label class="form-label">Magaca Xubnaha</label>
+      <input type="text" class="form-input" id="editName" readonly style="opacity:.6;cursor:not-allowed">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lacagta La Bixiyay ($)</label>
+      <input type="number" class="form-input" id="editAmount" placeholder="0.00" step="0.01" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bishii / Bisha La Dabooli</label>
+      <div class="months-check" id="editMonths"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Quarter</label>
+      <select class="form-select" id="editQuarter">
+        <option value="Q1-2026" selected>Q1 · May–Jul 2026</option>
+        <option value="Q2-2026">Q2 · Aug–Oct 2026</option>
+        <option value="Q3-2026">Q3 · Nov 2026–Jan 2027</option>
+        <option value="Q4-2026">Q4 · Feb–Apr 2027</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Xaalada</label>
+      <select class="form-select" id="editStatus">
+        <option value="green">✅ Fully Paid</option>
+        <option value="orange">🟠 Partial</option>
+        <option value="red">🔴 Unpaid / May Only</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button class="btn-save" onclick="saveEdit()">💾 Keydi</button>
+      <button class="btn-cancel" onclick="closeEdit()">Jooji</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">
+    <span style="font-size:1.3rem">🏛️</span>
+    <div>
+      <div>Reer Ali Mohamed</div>
+      <div class="logo-sub">Iskaashato Makufto</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="admin-btn" id="adminToggleBtn" onclick="toggleAdmin()">
+      <span id="adminBtnIcon">🔐</span>
+      <span id="adminBtnText">Admin</span>
+    </button>
+    <div class="admin-dot">A</div>
+  </div>
+</header>
+
+<!-- ADMIN BAR -->
+<div class="admin-bar">
+  <div class="admin-bar-dot"></div>
+  <span>Admin Mode Waa Furan YAHAY — Waxaad bedeli kartaa xogta xubnaha</span>
+  <button onclick="logoutAdmin()" style="margin-left:auto;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red);padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">Bax</button>
+</div>
+
+<!-- QUARTER TABS -->
+<nav class="quarter-nav" id="quarterNav">
+  <div class="q-tab active" onclick="switchQuarter('Q1-2026',this)">Q1 · May–Jul 2026 <span class="q-status qs-live"></span></div>
+  <div class="q-tab" onclick="switchQuarter('Q2-2026',this)">Q2 · Aug–Oct 2026 <span class="q-status qs-done"></span></div>
+  <div class="q-tab" onclick="switchQuarter('Q3-2026',this)">Q3 · Nov 2026–Jan 2027 <span class="q-status qs-done"></span></div>
+  <div class="q-tab" onclick="switchQuarter('Q4-2026',this)">Q4 · Feb–Apr 2027 <span class="q-status qs-done"></span></div>
+</nav>
+
+<div class="container">
+  <h1 class="page-title">Family <span id="qTitle">Treasury</span></h1>
+  <p class="page-sub" id="qSub">Q2 · May – July 2026 · Reer Ali Mohamed Iskaashato</p>
+
+  <!-- STATS -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card gold"><div class="stat-label">Wadarta La Ururiyay</div><div class="stat-value accent" id="statTotal">$675</div><div class="stat-sub" id="statMembers">26 xubnood</div></div>
+    <div class="stat-card green"><div class="stat-label">Buuxa Bixiyay</div><div class="stat-value green" id="statFull">14</div><div class="stat-sub">Multi-month payers</div></div>
+    <div class="stat-card blue"><div class="stat-label">Qayb Bixiyay</div><div class="stat-value" style="color:var(--accent2)" id="statPartial">8</div><div class="stat-sub">Ongoing monthly</div></div>
+    <div class="stat-card red"><div class="stat-label">Hadhay / Overdue</div><div class="stat-value red" id="statPending">4</div><div class="stat-sub">May oo keli ah</div></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-card">
+    <div class="progress-header">
+      <div><div class="progress-title">Q2 Collection Progress</div><div style="font-size:.73rem;color:var(--muted);margin-top:2px" id="progressDesc">Target: $260 (26 xubnood × $10/quarter)</div></div>
+      <div class="progress-pct" id="progressPct">67.5%</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressBar" style="width:67.5%"></div></div>
+    <div class="progress-meta"><span id="progressLeft">$175.50 la ururiyay quarter-kan</span><span id="progressRight">$84.50 hadhay</span></div>
+  </div>
+
+  <!-- TWO COL -->
+  <div class="two-col">
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-icon icon-gold">🏆</div>
+        <div><div class="section-title">Maamuuska & Sharafta</div><div class="section-desc">Xubnaha sida fiican u bixiyay</div></div>
+      </div>
+      <div class="hof-grid" id="hofGrid"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-icon icon-red">🚨</div>
+        <div><div class="section-title">Pending Alerts</div><div class="section-desc">Wali lacag ma bixin ama qayb</div></div>
+      </div>
+      <div class="alert-list" id="alertList"></div>
+    </div>
+  </div>
+
+  <!-- TRACKER TABLE -->
+  <div class="tracker-card">
+    <div class="tracker-header">
+      <div><div class="tracker-title">📋 Live Contribution Tracker</div><div style="font-size:.72rem;color:var(--muted);margin-top:2px">Xubnaha Reer Ali Mohamed oo dhan</div></div>
+      <div style="font-size:.72rem;color:var(--muted)" id="tableQuarterLabel">Q2 · 2026</div>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="filterTable('all',this)">Dhammaan</button>
+      <button class="filter-btn f-green" onclick="filterTable('green',this)">✅ Buuxa</button>
+      <button class="filter-btn f-orange" onclick="filterTable('orange',this)">🟠 Qayb</button>
+      <button class="filter-btn f-red" onclick="filterTable('red',this)">🔴 Hadhay</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table id="tracker-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Xubnaha</th>
+            <th>Xaalad</th>
+            <th>La Bixiyay</th>
+            <th>Progress</th>
+            <th>Bisha</th>
+            <th>Badge</th>
+            <th id="editColHead" style="display:none">Edit</th>
+          </tr>
+        </thead>
+        <tbody id="trackerBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Reer Ali Mohamed · Iskaashato Makufto · <strong style="color:var(--accent)" id="footerTotal">$675.00 la ururiyay</strong>
+</footer>
+
+<script>
+// ═══════════════════════════════════════
+// DATA STORE
+// ═══════════════════════════════════════
+
+const ADMIN_PASS = "reerali2026";
+
+const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const QUARTER_CONFIG = {
+  "Q1-2026": { label:"Q1 · May–Jul 2026",        months:["May","Jun","Jul"], target:260, live:true  },
+  "Q2-2026": { label:"Q2 · Aug–Oct 2026",         months:["Aug","Sep","Oct"], target:260, live:false },
+  "Q3-2026": { label:"Q3 · Nov 2026–Jan 2027",    months:["Nov","Dec","Jan"], target:260, live:false },
+  "Q4-2026": { label:"Q4 · Feb–Apr 2027",         months:["Feb","Mar","Apr"], target:260, live:false },
+};
+
+// Master member list (26 from PDF)
+const MEMBERS = [
+  { id:1,  name:"Adeer Omar Ali Mohamed",             av:"O", avClass:"av-blue"  },
+  { id:2,  name:"Adeer Abdisalan Ali Mohamed",        av:"A", avClass:"av-teal"  },
+  { id:3,  name:"Adeer Abdullahi Ali Mohamed",        av:"A", avClass:"av-pur"   },
+  { id:4,  name:"Abdirahman Hassan Ali (Fanax Fariid)",av:"A",avClass:"av-green" },
+  { id:5,  name:"Mohamud Hassan Ali (Aamanuu)",       av:"M", avClass:"av-gold"  },
+  { id:6,  name:"Dr. Libaan Hassan Ali",              av:"L", avClass:"av-pur"   },
+  { id:7,  name:"Abdullahi Hassan Ali",               av:"A", avClass:"av-gray"  },
+  { id:8,  name:"Usaame Hassan Ali",                  av:"U", avClass:"av-gray"  },
+  { id:9,  name:"Abdullahi Omar Ali (Dayip Haji)",    av:"A", avClass:"av-teal"  },
+  { id:10, name:"Ahmed Nor Omar Ali",                 av:"A", avClass:"av-blue"  },
+  { id:11, name:"Mohamed Omar Ali (Amiin)",           av:"M", avClass:"av-rose"  },
+  { id:12, name:"Akram Omar Ali",                     av:"A", avClass:"av-gray"  },
+  { id:13, name:"Abdirahman Omar Ali",                av:"A", avClass:"av-gray"  },
+  { id:14, name:"Mohamed Cigale Ali (Ugaas Cigale)",  av:"M", avClass:"av-gold"  },
+  { id:15, name:"Abdullahi Cigale Ali",               av:"A", avClass:"av-gray"  },
+  { id:16, name:"Mahamed Axamed Ali (Towfiiq)",       av:"M", avClass:"av-gray"  },
+  { id:17, name:"Omar Ahmed Ali (Dhuule)",            av:"O", avClass:"av-gray"  },
+  { id:18, name:"Usaame Ahmed Ali",                   av:"U", avClass:"av-blue"  },
+  { id:19, name:"Abdirahman Abdullahi Ali",           av:"A", avClass:"av-gray"  },
+  { id:20, name:"Eng. Abdihakin Abdullahi Ali",       av:"E", avClass:"av-gray"  },
+  { id:21, name:"Sh. Ahmed Ali Yusuf",                av:"S", avClass:"av-teal"  },
+  { id:22, name:"Mohamed Ali Yusuf (Xarako)",         av:"M", avClass:"av-pur"   },
+  { id:23, name:"Abdinasir Hussein Ali",              av:"A", avClass:"av-gray"  },
+  { id:24, name:"Ahmed Abdulkadir Ali",               av:"A", avClass:"av-rose"  },
+  { id:25, name:"Omar Abdulkadir Ali",                av:"O", avClass:"av-blue"  },
+  { id:26, name:"Abdirahman Abdulkadir Ali (Eng Black)",av:"A",avClass:"av-green"},
+];
+
+// Contributions per quarter per member
+// status: green=fully, orange=partial, red=may-only/overdue
+let DATA = {
+  "Q1-2026": {
+    // Q1 · May–Jul 2026 — xogta dhabta ah ee PDF-ka
+    1:  { amount:30,  months:["May"], status:"green" },
+    2:  { amount:30,  months:["May"], status:"green" },
+    3:  { amount:30,  months:["May"], status:"green" },
+    4:  { amount:45,  months:["May","Jun","Jul"], status:"green" },
+    5:  { amount:100, months:["May","Jun","Jul","Aug","Sep"], status:"green" },
+    6:  { amount:30,  months:["May","Jun","Jul"], status:"green" },
+    7:  { amount:10,  months:["May"], status:"red" },
+    8:  { amount:10,  months:["May"], status:"red" },
+    9:  { amount:30,  months:["May","Jun","Jul"], status:"green" },
+    10: { amount:30,  months:["May","Jun","Jul"], status:"green" },
+    11: { amount:30,  months:["May","Jun","Jul"], status:"green" },
+    12: { amount:10,  months:["May"], status:"red" },
+    13: { amount:10,  months:["May"], status:"red" },
+    14: { amount:60,  months:["May","Jun","Jul","Aug","Sep","Oct"], status:"green" },
+    15: { amount:10,  months:["May"], status:"red" },
+    16: { amount:10,  months:["May"], status:"red" },
+    17: { amount:10,  months:["May"], status:"red" },
+    18: { amount:20,  months:["May","Jun"], status:"orange" },
+    19: { amount:10,  months:["May"], status:"red" },
+    20: { amount:10,  months:["May"], status:"red" },
+    21: { amount:20,  months:["May","Jun"], status:"orange" },
+    22: { amount:30,  months:["May","Jun","Jul"], status:"green" },
+    23: { amount:10,  months:["May"], status:"red" },
+    24: { amount:40,  months:["May","Jun","Jul","Aug"], status:"green" },
+    25: { amount:30,  months:["May","Jun","Jul"], status:"green" },
+    26: { amount:20,  months:["May","Jun"], status:"orange" },
+  },
+  "Q2-2026": {
+    // Q2 · Aug–Oct 2026 — mustaqbalka, empty
+    1:{amount:0,months:[],status:"red"},2:{amount:0,months:[],status:"red"},
+    3:{amount:0,months:[],status:"red"},4:{amount:0,months:[],status:"red"},
+    5:{amount:0,months:[],status:"red"},6:{amount:0,months:[],status:"red"},
+    7:{amount:0,months:[],status:"red"},8:{amount:0,months:[],status:"red"},
+    9:{amount:0,months:[],status:"red"},10:{amount:0,months:[],status:"red"},
+    11:{amount:0,months:[],status:"red"},12:{amount:0,months:[],status:"red"},
+    13:{amount:0,months:[],status:"red"},14:{amount:0,months:[],status:"red"},
+    15:{amount:0,months:[],status:"red"},16:{amount:0,months:[],status:"red"},
+    17:{amount:0,months:[],status:"red"},18:{amount:0,months:[],status:"red"},
+    19:{amount:0,months:[],status:"red"},20:{amount:0,months:[],status:"red"},
+    21:{amount:0,months:[],status:"red"},22:{amount:0,months:[],status:"red"},
+    23:{amount:0,months:[],status:"red"},24:{amount:0,months:[],status:"red"},
+    25:{amount:0,months:[],status:"red"},26:{amount:0,months:[],status:"red"},
+  },
+  "Q3-2026": {
+    // Q3 · Nov 2026–Jan 2027 — mustaqbalka, empty
+    1:{amount:0,months:[],status:"red"},2:{amount:0,months:[],status:"red"},
+    3:{amount:0,months:[],status:"red"},4:{amount:0,months:[],status:"red"},
+    5:{amount:0,months:[],status:"red"},6:{amount:0,months:[],status:"red"},
+    7:{amount:0,months:[],status:"red"},8:{amount:0,months:[],status:"red"},
+    9:{amount:0,months:[],status:"red"},10:{amount:0,months:[],status:"red"},
+    11:{amount:0,months:[],status:"red"},12:{amount:0,months:[],status:"red"},
+    13:{amount:0,months:[],status:"red"},14:{amount:0,months:[],status:"red"},
+    15:{amount:0,months:[],status:"red"},16:{amount:0,months:[],status:"red"},
+    17:{amount:0,months:[],status:"red"},18:{amount:0,months:[],status:"red"},
+    19:{amount:0,months:[],status:"red"},20:{amount:0,months:[],status:"red"},
+    21:{amount:0,months:[],status:"red"},22:{amount:0,months:[],status:"red"},
+    23:{amount:0,months:[],status:"red"},24:{amount:0,months:[],status:"red"},
+    25:{amount:0,months:[],status:"red"},26:{amount:0,months:[],status:"red"},
+  },
+  "Q4-2026": {
+    // Q4 · Feb–Apr 2027 — mustaqbalka, empty
+    1:{amount:0,months:[],status:"red"},2:{amount:0,months:[],status:"red"},
+    3:{amount:0,months:[],status:"red"},4:{amount:0,months:[],status:"red"},
+    5:{amount:0,months:[],status:"red"},6:{amount:0,months:[],status:"red"},
+    7:{amount:0,months:[],status:"red"},8:{amount:0,months:[],status:"red"},
+    9:{amount:0,months:[],status:"red"},10:{amount:0,months:[],status:"red"},
+    11:{amount:0,months:[],status:"red"},12:{amount:0,months:[],status:"red"},
+    13:{amount:0,months:[],status:"red"},14:{amount:0,months:[],status:"red"},
+    15:{amount:0,months:[],status:"red"},16:{amount:0,months:[],status:"red"},
+    17:{amount:0,months:[],status:"red"},18:{amount:0,months:[],status:"red"},
+    19:{amount:0,months:[],status:"red"},20:{amount:0,months:[],status:"red"},
+    21:{amount:0,months:[],status:"red"},22:{amount:0,months:[],status:"red"},
+    23:{amount:0,months:[],status:"red"},24:{amount:0,months:[],status:"red"},
+    25:{amount:0,months:[],status:"red"},26:{amount:0,months:[],status:"red"},
+  }
+};
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let currentQuarter = "Q1-2026";
+let isAdmin = false;
+let editingMemberId = null;
+let activeFilter = "all";
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function render() {
+  const qData = DATA[currentQuarter];
+  const qConf = QUARTER_CONFIG[currentQuarter];
+
+  // Stats
+  let total=0, full=0, partial=0, pending=0;
+  MEMBERS.forEach(m => {
+    const d = qData[m.id];
+    total += d.amount;
+    if(d.status==="green") full++;
+    else if(d.status==="orange") partial++;
+    else pending++;
+  });
+
+  document.getElementById("statTotal").textContent = "$"+total.toFixed(0);
+  document.getElementById("statFull").textContent = full;
+  document.getElementById("statPartial").textContent = partial;
+  document.getElementById("statPending").textContent = pending;
+  document.getElementById("statMembers").textContent = "26 xubnood · "+qConf.label;
+  document.getElementById("footerTotal").textContent = "$"+total.toFixed(2)+" la ururiyay";
+  document.getElementById("qTitle").textContent = "Treasury — "+currentQuarter;
+  document.getElementById("qSub").textContent = qConf.label+" · Reer Ali Mohamed Iskaashato";
+  document.getElementById("tableQuarterLabel").textContent = currentQuarter;
+
+  // Progress
+  const pct = Math.min(100, (total / qConf.target)*100);
+  const remaining = Math.max(0, qConf.target - total);
+  document.getElementById("progressPct").textContent = pct.toFixed(1)+"%";
+  document.getElementById("progressBar").style.width = pct+"%";
+  document.getElementById("progressDesc").textContent = "Target: $"+qConf.target+" (26 × $10/quarter)";
+  document.getElementById("progressLeft").textContent = "$"+total.toFixed(2)+" la ururiyay quarter-kan";
+  document.getElementById("progressRight").textContent = "$"+remaining.toFixed(2)+" hadhay";
+
+  renderHOF(qData, qConf);
+  renderAlerts(qData);
+  renderTable(qData, qConf);
+}
+
+function getAvatar(m, size="av-sm") {
+  return `<div class="avatar ${size} ${m.avClass}">${m.av}</div>`;
+}
+
+function renderHOF(qData, qConf) {
+  const vips = [], heroes = [];
+  MEMBERS.forEach(m => {
+    const d = qData[m.id];
+    if(d.status==="green" && d.months.length >= 5) vips.push({m,d});
+    else if(d.status==="green" && d.months.length >= 3) heroes.push({m,d});
+  });
+
+  let html = "";
+  if(vips.length) {
+    html += `<div class="hof-divider">⭐ Quarter VIP — 5+ bishan ku bixiyay</div>`;
+    vips.forEach(({m,d}) => {
+      html += `<div class="hof-item">
+        ${getAvatar(m)}
+        <div class="hof-info"><div class="hof-name">${m.name}</div><div class="hof-amt">$${d.amount} · ${d.months.join("–")}</div></div>
+        <span class="badge badge-vip">👑 Quarter VIP</span>
+      </div>`;
+    });
+  }
+  if(heroes.length) {
+    html += `<div class="hof-divider" style="margin-top:10px">🔵 On-Time Hero — 3–4 bilood</div>`;
+    heroes.forEach(({m,d}) => {
+      html += `<div class="hof-item">
+        ${getAvatar(m)}
+        <div class="hof-info"><div class="hof-name">${m.name}</div><div class="hof-amt">$${d.amount} · ${d.months.join("–")}</div></div>
+        <span class="badge badge-hero">🔵 On-Time Hero</span>
+      </div>`;
+    });
+  }
+  if(!vips.length && !heroes.length) {
+    html = `<div class="no-data">Quarter-kan wax xogoo jirin</div>`;
+  }
+  document.getElementById("hofGrid").innerHTML = html;
+}
+
+function renderAlerts(qData) {
+  const pending = MEMBERS.filter(m => qData[m.id].status === "red");
+  let html = "";
+  if(!pending.length) {
+    html = `<div class="no-data" style="text-align:center;padding:24px;font-size:.82rem">🎉 Xubin kasta waa bixiyay!</div>`;
+  } else {
+    pending.forEach(m => {
+      const d = qData[m.id];
+      const paidStr = d.amount > 0 ? `$${d.amount} ✓` : "$0";
+      html += `<div class="alert-item">
+        <div class="pulse"></div>
+        ${getAvatar(m)}
+        <div class="alert-name">${m.name}</div>
+        <div class="alert-due">${paidStr}</div>
+      </div>`;
+    });
+  }
+  document.getElementById("alertList").innerHTML = html;
+}
+
+function renderTable(qData, qConf) {
+  document.getElementById("editColHead").style.display = isAdmin ? "" : "none";
+  let html = "";
+  MEMBERS.forEach((m,i) => {
+    const d = qData[m.id];
+    if(activeFilter !== "all" && d.status !== activeFilter) return;
+    const chipClass = d.status==="green"?"chip-green":d.status==="orange"?"chip-orange":"chip-red";
+    const chipLabel = d.status==="green"?"✓ Buuxa":d.status==="orange"?"⚠ Qayb":"🔴 Hadhay";
+    const fillClass = d.status==="green"?"mf-green":d.status==="orange"?"mf-orange":"";
+    const fillW = d.status==="green"?100:d.status==="orange"?Math.round((d.months.length/qConf.months.length)*100):0;
+    const amtColor = d.status==="green"?"text-green":d.status==="orange"?"text-orange":"text-red";
+    const amtStr = d.status==="green" ? `$${d.amount.toFixed(2)}` : `$${d.amount.toFixed(2)} / $30`;
+
+    // Badge
+    let badge = "—";
+    if(d.status==="green" && d.months.length >= 5) badge = `<span class="badge badge-vip">👑 VIP</span>`;
+    else if(d.status==="green" && d.months.length >= 3) badge = `<span class="badge badge-hero">🔵 Hero</span>`;
+
+    // Months pills
+    const allMonths = [...new Set([...qConf.months, ...d.months])];
+    const monthPills = qConf.months.map(mo => {
+      const paid = d.months.includes(mo);
+      return `<span class="month-pill ${paid?"mp-paid":"mp-un"}">${mo}</span>`;
+    }).join("");
+
+    // Edit btn
+    const editBtn = isAdmin ? `<button class="edit-btn" onclick="openEdit(${m.id})">✏️ Edit</button>` : "";
+
+    html += `<tr data-status="${d.status}">
+      <td class="mono text-muted">${String(i+1).padStart(2,"0")}</td>
+      <td><div class="member-cell">${getAvatar(m,"av-sm")}<div class="member-name">${m.name}</div></div></td>
+      <td><span class="status-chip ${chipClass}">${chipLabel}</span></td>
+      <td class="mono ${amtColor}">${amtStr}</td>
+      <td><div class="mini-bar"><div class="mini-fill ${fillClass}" style="width:${fillW}%"></div></div></td>
+      <td><div class="months-tag">${monthPills}</div></td>
+      <td>${badge}</td>
+      ${isAdmin?`<td>${editBtn}</td>`:""}
+    </tr>`;
+  });
+  if(!html) html = `<tr><td colspan="8" class="no-data">Xog ma jirto</td></tr>`;
+  document.getElementById("trackerBody").innerHTML = html;
+}
+
+// ═══════════════════════════════════════
+// QUARTER SWITCH
+// ═══════════════════════════════════════
+function switchQuarter(q, el) {
+  currentQuarter = q;
+  document.querySelectorAll(".q-tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  activeFilter = "all";
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".filter-btn")[0].classList.add("active");
+  render();
+}
+
+// ═══════════════════════════════════════
+// FILTER
+// ═══════════════════════════════════════
+function filterTable(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active","f-green","f-orange","f-red"));
+  btn.classList.add("active");
+  renderTable(DATA[currentQuarter], QUARTER_CONFIG[currentQuarter]);
+}
+
+// ═══════════════════════════════════════
+// ADMIN AUTH
+// ═══════════════════════════════════════
+function toggleAdmin() {
+  if(isAdmin) { logoutAdmin(); return; }
+  document.getElementById("loginOverlay").classList.add("open");
+  setTimeout(()=>document.getElementById("loginPass").focus(), 100);
+}
+function doLogin() {
+  const pw = document.getElementById("loginPass").value;
+  if(pw === ADMIN_PASS) {
+    isAdmin = true;
+    document.getElementById("loginOverlay").classList.remove("open");
+    document.getElementById("loginPass").value = "";
+    document.getElementById("loginErr").style.display = "none";
+    document.body.classList.add("admin-mode");
+    document.getElementById("adminBtnText").textContent = "Admin ON";
+    document.getElementById("adminBtnIcon").textContent = "✅";
+    document.getElementById("editColHead").style.display = "";
+    render();
+    showToast("✅ Admin mode waa furan yahay");
+  } else {
+    document.getElementById("loginErr").style.display = "block";
+    document.getElementById("loginPass").value = "";
+    document.getElementById("loginPass").focus();
+  }
+}
+function closeLogin() {
+  document.getElementById("loginOverlay").classList.remove("open");
+  document.getElementById("loginPass").value = "";
+  document.getElementById("loginErr").style.display = "none";
+}
+function logoutAdmin() {
+  isAdmin = false;
+  document.body.classList.remove("admin-mode");
+  document.getElementById("adminBtnText").textContent = "Admin";
+  document.getElementById("adminBtnIcon").textContent = "🔐";
+  render();
+  showToast("🔒 Admin mode waa xidhay");
+}
+
+// ═══════════════════════════════════════
+// EDIT MODAL
+// ═══════════════════════════════════════
+function openEdit(memberId) {
+  editingMemberId = memberId;
+  const m = MEMBERS.find(x => x.id === memberId);
+  const d = DATA[currentQuarter][memberId];
+  const qConf = QUARTER_CONFIG[currentQuarter];
+
+  document.getElementById("editModalTitle").textContent = "✏️ Edit — "+m.name;
+  document.getElementById("editName").value = m.name;
+  document.getElementById("editAmount").value = d.amount;
+  document.getElementById("editStatus").value = d.status;
+  document.getElementById("editQuarter").value = currentQuarter;
+
+  // Build month checkboxes for all possible months in Q + extra advance months
+  const allMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  let checkHtml = "";
+  allMonths.forEach(mo => {
+    const checked = d.months.includes(mo);
+    checkHtml += `<label class="month-cb ${checked?"checked":""}" id="mcb-${mo}">
+      <input type="checkbox" value="${mo}" ${checked?"checked":""} onchange="toggleMonthCB(this,'${mo}')"> ${mo}
+    </label>`;
+  });
+  document.getElementById("editMonths").innerHTML = checkHtml;
+
+  document.getElementById("editOverlay").classList.add("open");
+}
+
+function toggleMonthCB(el, mo) {
+  const lbl = document.getElementById("mcb-"+mo);
+  if(el.checked) lbl.classList.add("checked");
+  else lbl.classList.remove("checked");
+}
+
+function saveEdit() {
+  if(!editingMemberId) return;
+  const amount = parseFloat(document.getElementById("editAmount").value) || 0;
+  const status = document.getElementById("editStatus").value;
+  const quarter = document.getElementById("editQuarter").value;
+
+  const checkedMonths = [];
+  document.querySelectorAll("#editMonths input[type=checkbox]:checked").forEach(cb => {
+    checkedMonths.push(cb.value);
+  });
+
+  // Preserve month order
+  const monthOrder = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  checkedMonths.sort((a,b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+
+  DATA[quarter][editingMemberId] = { amount, months: checkedMonths, status };
+
+  closeEdit();
+  render();
+  showToast("✅ Xogta waa la keydinay");
+}
+
+function closeEdit() {
+  document.getElementById("editOverlay").classList.remove("open");
+  editingMemberId = null;
+}
+
+// Close overlay on backdrop click
+document.getElementById("editOverlay").addEventListener("click", function(e) {
+  if(e.target === this) closeEdit();
+});
+document.getElementById("loginOverlay").addEventListener("click", function(e) {
+  if(e.target === this) closeLogin();
+});
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+render();
+</script>
+</body>
+</html>
